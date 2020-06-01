@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
-from math import *
-from utils import gaussian, gaussian_OP
+from src.utils.utils import gaussian, gaussian_OP
 
 
 def getHeatmap_OP(image, joint, sigma):
