@@ -1,0 +1,5 @@
+UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+
+Solution:
+
+1.   from ipykernel import kernelapp as app
