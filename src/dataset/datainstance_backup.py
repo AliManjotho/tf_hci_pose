@@ -3,8 +3,7 @@ import cv2
 
 class DataInstance:
 
-    def __init__(self, imageId, imageFileName, imagePath, imageWidth, imageHeight, keypoints):
-        self.__imageId = imageId
+    def __init__(self, imageFileName, imagePath, imageWidth, imageHeight, keypoints):
         self.__imageFileName = imageFileName
         self.__imagePath = imagePath
         self.__imageWidth = imageWidth
@@ -119,5 +118,5 @@ class DataInstance:
         return "Image: {0}\n" \
                "Width: {1}\n" \
                "Height: {2}\n" \
-               "Num: of persons: {3}".format(self.__imagePath, self.__imageWidth, self.__imageHeight, len(self.__keypoints))
+               "Num: of persons: {3}".format(self.__imageFileName, self.__imageWidth, self.__imageHeight, len(self.__keypoints))
 
