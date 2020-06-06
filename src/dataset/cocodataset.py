@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+import pandas as pd
 from src.dataset.dataset import Dataset
 from src.dataset.datainstance import DataInstance
 
@@ -35,8 +36,8 @@ class COCODataset(Dataset):
                 imageId = row[0]
                 fileName = row[1]
                 filePath = row[2]
-                width = row[3]
-                height = row[4]
+                width = int(row[3])
+                height = int(row[4])
                 keypoints = self.__str2keypointList(row[5])
 
                 self.__trainDataInstances.append( DataInstance(imageId, fileName, filePath, width, height, keypoints) )
@@ -47,6 +48,15 @@ class COCODataset(Dataset):
     def getTrainInstances(self):
         return self.__trainDataInstances
 
+
+    def getTrainInstancesAsPD(self):
+
+        dataList = list()
+
+        for instance in self.__trainDataInstances:
+            dataList.append([instance.getImageId(), instance.getImageFileName(), instance.getImagePath(), instance.getImageWidth(), instance.getImageHeight(), instance.getKeypoints()])
+
+        return  pd.DataFrame(dataList, columns=['Id', 'ImageName', 'ImagePath', 'Width', 'Height', 'Keypoints'])
 
 
     def __str2keypointList(self, keypointStr):

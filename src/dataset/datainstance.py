@@ -13,6 +13,9 @@ class DataInstance:
         self.__heatmaps = 0
         self.__pafs = 0
 
+    def getImageId(self):
+        return self.__imageId
+
     def getImageFileName(self):
         return self.__imageFileName
 
