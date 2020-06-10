@@ -16,18 +16,20 @@ class COCODataset(Dataset):
         # Define annotation and image directories
         self.__trainCSVFile = 'datasets/coco2017_refined/annotations/train2017.csv'
         self.__trainImagesDir = 'datasets/coco2017_refined//train2017/'
+        self.__valCSVFile = 'datasets/coco2017_refined/annotations/val2017.csv'
+        self.__valImagesDir = 'datasets/coco2017_refined//val2017/'
 
 
-    def load(self):
+    def loadTrain(self):
 
         csvFile = open(self.__trainCSVFile)
-        csReader = csv.reader(csvFile, delimiter=',')
+        csvReader = csv.reader(csvFile, delimiter=',')
 
-        # Load TrainDataInstances
+        # Load DataInstances
         self.__trainDataInstances = list()
 
         rowCount = 0
-        for row in csReader:
+        for row in csvReader:
 
             #First row is headers
             if rowCount == 0:
@@ -45,8 +47,40 @@ class COCODataset(Dataset):
         csvFile.close()
 
 
+    def loadVal(self):
+
+        csvFile = open(self.__valCSVFile)
+        csvReader = csv.reader(csvFile, delimiter=',')
+
+        # Load DataInstances
+        self.__valDataInstances = list()
+
+        rowCount = 0
+        for row in csvReader:
+
+            #First row is headers
+            if rowCount == 0:
+                rowCount += 1
+            else:
+                imageId = row[0]
+                fileName = row[1]
+                filePath = row[2]
+                width = int(row[3])
+                height = int(row[4])
+                keypoints = self.__str2keypointList(row[5])
+
+                self.__valDataInstances.append( DataInstance(imageId, fileName, filePath, width, height, keypoints) )
+
+        csvFile.close()
+
+
+
+
     def getTrainInstances(self):
         return self.__trainDataInstances
+
+    def getValidationInstances(self):
+        return self.__valDataInstances
 
 
     def getTrainInstancesAsPD(self):
@@ -54,6 +88,15 @@ class COCODataset(Dataset):
         dataList = list()
 
         for instance in self.__trainDataInstances:
+            dataList.append([instance.getImageId(), instance.getImageFileName(), instance.getImagePath(), instance.getImageWidth(), instance.getImageHeight(), instance.getKeypoints()])
+
+        return  pd.DataFrame(dataList, columns=['Id', 'ImageName', 'ImagePath', 'Width', 'Height', 'Keypoints'])
+
+    def getValidationInstancesAsPD(self):
+
+        dataList = list()
+
+        for instance in self.__valDataInstances:
             dataList.append([instance.getImageId(), instance.getImageFileName(), instance.getImagePath(), instance.getImageWidth(), instance.getImageHeight(), instance.getKeypoints()])
 
         return  pd.DataFrame(dataList, columns=['Id', 'ImageName', 'ImagePath', 'Width', 'Height', 'Keypoints'])

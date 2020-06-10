@@ -74,7 +74,7 @@ def isPointOnLimb(p : Point2D, limb : Limb):
      v_ = getVPerp(limb)
      l = limb.getLength()
      lw = 20
-     j1 = limb.joint2
+     j1 = limb.joint1
 
      val1 = v.dot(p - j1)
      val2 = abs( v_.dot(p - j1) )
