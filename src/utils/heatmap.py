@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from src.utils.utils import gaussian, gaussian_OP
+from src.utils.utils import gaussian, gaussian_OP, gauss
 
 
 def getHeatmap_OP(image, joint, sigma):
@@ -52,6 +52,31 @@ def getHeatmapImage(image, joint, sigmax, sigmay):
     imgOut = cv2.addWeighted(image, 0.5, hmap, 0.5, 0)
 
     return imgOut
+
+
+
+def get_heatmap(image, keypoints, sigma):
+
+    height = image.shape[0]
+    width = image.shape[1]
+    nJoints = 17
+
+    hmaps = np.zeros((nJoints + 1, height, width))
+
+    # Iterate through keypoints of each person in image
+    for person_keypoints in keypoints:
+
+        for jointIndex in range(nJoints):
+            kps = person_keypoints[jointIndex]
+
+            if kps[2] == 2:
+                p_x, p_y = np.meshgrid(np.arange(width), np.arange(height))
+                hmaps[jointIndex] = np.maximum(hmaps[jointIndex], gauss(p_x, p_y, kps[0], kps[1], sigma))
+
+    # Background heatmap
+    hmaps[nJoints] = 1 - np.sum(hmaps[0:nJoints], axis=0)
+
+    return hmaps
 
 
 
