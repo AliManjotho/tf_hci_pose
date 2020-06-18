@@ -3,6 +3,7 @@ import os
 import shutil
 import csv
 from pycocotools.coco import COCO
+from src.utils.utils import keypoints2String
 
 
 class COCORefiner:
@@ -89,7 +90,7 @@ class COCORefiner:
                 vs = np.array([kps[v] for v in range(2, len(kps), 3)])
 
                 # Only keep those keypoints where atleat one point is set visible
-                if np.any(vs==2):
+                if np.any(vs > 0):
                     keypoints.append(list(zip(xs, ys, vs)))
 
             # Skip the image if none of the keypoint is visible for any person
@@ -98,6 +99,7 @@ class COCORefiner:
 
             imageCount = imageCount + 1
 
+
             # Generate meta info for new image to be generated
             newImageId = '{0:010d}'.format(imageCount)
             newImageFileName = newImageId + ".jpg"
@@ -105,23 +107,8 @@ class COCORefiner:
             shutil.copyfile(imagePath, newImageFilePath)
 
             # Write a data instance in to CSV file
-            csvWriter.writerow([newImageId, newImageFileName, newImageFilePath, imageWidth, imageHeight, self.__keypointList2str(keypoints)])
+            csvWriter.writerow([newImageId, newImageFileName, newImageFilePath, imageWidth, imageHeight, keypoints2String(np.array(keypoints))])
 
             print('{0} copied of {1}'.format(imageCount, len(images)))
 
         csvFile.close()
-
-
-    def __keypointList2str(self, keypoints):
-
-        keypointsStr = ''
-        for person in keypoints:
-            for kp in person:
-                keypointsStr = keypointsStr + str(kp[0]) + ',' + str(kp[1]) + ','  + str(kp[2]) + '\n'
-
-            keypointsStr = keypointsStr + ';\n'
-
-        keypointsStr = keypointsStr.replace('\n;', ';')
-        keypointsStr = keypointsStr[:-2]
-
-        return keypointsStr

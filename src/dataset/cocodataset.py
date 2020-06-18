@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 from src.dataset.dataset import Dataset
 from src.dataset.datainstance import DataInstance
+from src.utils.utils import string2Keypoints
 
 
 class COCODataset(Dataset):
@@ -40,7 +41,7 @@ class COCODataset(Dataset):
                 filePath = row[2]
                 width = int(row[3])
                 height = int(row[4])
-                keypoints = self.__str2keypointList(row[5])
+                keypoints = string2Keypoints(row[5])
 
                 self.__trainDataInstances.append( DataInstance(imageId, fileName, filePath, width, height, keypoints) )
 
@@ -67,7 +68,7 @@ class COCODataset(Dataset):
                 filePath = row[2]
                 width = int(row[3])
                 height = int(row[4])
-                keypoints = self.__str2keypointList(row[5])
+                keypoints = string2Keypoints(row[5])
 
                 self.__valDataInstances.append( DataInstance(imageId, fileName, filePath, width, height, keypoints) )
 
@@ -100,28 +101,3 @@ class COCODataset(Dataset):
             dataList.append([instance.getImageId(), instance.getImageFileName(), instance.getImagePath(), instance.getImageWidth(), instance.getImageHeight(), instance.getKeypoints()])
 
         return  pd.DataFrame(dataList, columns=['Id', 'ImageName', 'ImagePath', 'Width', 'Height', 'Keypoints'])
-
-
-    def __str2keypointList(self, keypointStr):
-
-        keypoints = list()
-        personsStr = keypointStr.split(';\n')
-
-        for personStr in personsStr:
-            kpsStr = personStr.split('\n')
-
-            personKeypoints = list()
-            for kpStr in kpsStr:
-                kpPointsStr = kpStr.split(',')
-
-                kpTuple = (int(kpPointsStr[0]), int(kpPointsStr[1]), int(kpPointsStr[2]))
-                personKeypoints.append(kpTuple)
-
-            keypoints.append(personKeypoints)
-
-        return keypoints
-
-
-
-
-

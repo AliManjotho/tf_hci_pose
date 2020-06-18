@@ -1,10 +1,38 @@
 import cv2
-import numpy as np
+from src.dataset.cocodataset import COCODataset
+from src.utils.paf import getPAFs
+from src.utils.heatmap import getHeatmaps
+from src.visualization.visualize import visualizePAF, visualizeSkeleton, visualizeHeatmap
 
 
-img = np.zeros((480,640,3), np.uint8)
-img = cv2.arrowedLine(img, (50,50), (60,60), (0,0,255), thickness=1, line_type=cv2.LINE_AA, tipLength=0.5)
+coco17 = COCODataset()
+coco17.loadTrain()
+trainDataInstances = coco17.getTrainInstances()
 
+index = 0
 
-cv2.imshow('Arrow', img)
-cv2.waitKey(0)
+while True:
+    instance = trainDataInstances[index]
+    image = instance.getImage()
+    keypoints = instance.getKeypoints()
+
+    pafs = getPAFs(image, keypoints, 7)
+    hmaps = getHeatmaps(image, keypoints, sigma=10)
+
+    visualizePAF(image, pafs, showLimb=-1)
+    visualizeHeatmap(image, hmaps, limbId=-1)
+    visualizeSkeleton(image, keypoints)
+
+    key = cv2.waitKey(0)
+
+    if key == 27:
+        exit(0)
+    elif key == 115:
+        index = index + 1
+    elif key == 97:
+        index = index - 1
+
+    if index < 0 or index >= len(trainDataInstances):
+        break
+
+cv2.destroyAllWindows()

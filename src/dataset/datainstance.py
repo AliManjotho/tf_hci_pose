@@ -87,7 +87,6 @@ class DataInstance:
         boneColor =  (0, 255, 0)
 
         for person in self.getKeypoints():
-
             for limb in limbs:
 
                 x1 = y1 = x2 = y2 = 0

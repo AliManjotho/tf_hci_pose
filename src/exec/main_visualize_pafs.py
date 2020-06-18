@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from src.dataset.cocodataset import COCODataset
-from src.utils.paf import getPAF
+from src.utils.paf import getPAFs
 from src.visualization.visualize import visualizePAF
 from math import degrees, atan2
 
@@ -14,7 +14,7 @@ img = instance.getImage()
 keypoints = instance.getKeypoints()
 
 
-#pafs = getPAF(img, keypoints, 7)
+#pafs = getPAFs(img, keypoints, 7)
 #img = visualizePAF(img, pafs, showLimb=-1, winTitle='PAFs', type='circles')
 #p.savetxt('pafX.csv', pafs[8, 0, : , :], fmt="%s", delimiter=',')
 #p.savetxt('pafY.csv', pafs[8, 1, : , :], fmt="%s", delimiter=',')

@@ -1,8 +1,6 @@
 import cv2
-import PIL as Image
-import numpy as np
-from src.utils.paf import getPAF, LIMBS
-from src.utils.heatmap import get_heatmap
+from src.utils.paf import getPAFs
+from src.utils.heatmap import getHeatmaps
 from src.visualization.visualize import visualizePAF, visualizeSkeleton, visualizeHeatmap
 
 
@@ -36,11 +34,11 @@ keypoints_test_2 = [
 image_test_1 = cv2.imread('images/test_image_1.jpg')
 image_test_2 = cv2.imread('images/test_image_2.jpg')
 
-pafs = getPAF(image_test_2, keypoints_test_2, 7)
+pafs = getPAFs(image_test_2, keypoints_test_2, 7)
 img = visualizePAF(image_test_2, pafs, showLimb=8)
 #cv2.imwrite('test_image_2_paf.jpg', img)
 
-hmaps = get_heatmap(image_test_2, keypoints_test_2, sigma=10)
+hmaps = getHeatmaps(image_test_2, keypoints_test_2, sigma=10)
 img = visualizeHeatmap(image_test_2, hmaps, limbId=-1)
 #cv2.imwrite('test_image_2_hmap.jpg', img)
 
