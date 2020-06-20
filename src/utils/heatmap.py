@@ -23,4 +23,6 @@ def getHeatmaps(image, keypoints, sigma):
     # Background heatmap
     hmaps[nJoints] = 1 - np.sum(hmaps[0:nJoints], axis=0)
 
+    #heatmap[:, :, -1] = np.clip(1.0 - np.amax(heatmap, axis=2), 0.0, 1.0)
+
     return hmaps
