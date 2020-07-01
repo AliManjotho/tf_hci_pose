@@ -3,17 +3,30 @@ import cv2
 from src.utils.constants import CONSTANTS
 from src.core.color import Color
 
-def visualizeHeatmap(image, hmaps, limbId=0, winTitle='Heatmaps'):
+def visualizeAllHeatmap(image, hmaps, winTitle='Heatmaps'):
     img = image.copy()
 
-    hmaps = hmaps[limbId]
-
-    #hmaps = hmaps.max(axis=0)
+    # Get all heatmap except background
+    hmaps = hmaps[0:-2]
+    hmaps = hmaps.max(axis=0)
     hmaps = np.uint8(hmaps / hmaps.max() * 255)
 
     hmaps = cv2.applyColorMap(hmaps, cv2.COLORMAP_JET)
     img = cv2.addWeighted(img, 0.5, hmaps, 0.5, 0)
+    cv2.imshow(winTitle, img)
 
+    return img
+
+
+def visualizeBackgroundHeatmap(image, hmaps, winTitle='Background Heatmap'):
+    img = image.copy()
+
+    # Get only background heatmap
+    hmaps = hmaps[-1]
+    hmaps = np.uint8(hmaps / hmaps.max() * 255)
+
+    hmaps = cv2.applyColorMap(hmaps, cv2.COLORMAP_JET)
+    img = cv2.addWeighted(img, 0.5, hmaps, 0.5, 0)
     cv2.imshow(winTitle, img)
 
     return img

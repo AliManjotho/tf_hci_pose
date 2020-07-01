@@ -2,7 +2,7 @@ import cv2
 from src.dataset.cocodataset import COCODataset
 from src.utils.paf import getPAFs
 from src.utils.heatmap import getHeatmaps
-from src.visualization.visualize import visualizePAF, visualizeSkeleton, visualizeHeatmap
+from src.visualization.visualize import visualizePAF, visualizeSkeleton, visualizeAllHeatmap,visualizeBackgroundHeatmap
 
 
 coco17 = COCODataset()
@@ -20,7 +20,8 @@ while True:
     hmaps = getHeatmaps(image, keypoints, sigma=10)
 
     visualizePAF(image, pafs, showLimb=-1)
-    visualizeHeatmap(image, hmaps, limbId=-1)
+    visualizeAllHeatmap(image, hmaps)
+    visualizeBackgroundHeatmap(image, hmaps)
     visualizeSkeleton(image, keypoints)
 
     key = cv2.waitKey(0)

@@ -13,8 +13,8 @@ def getHeatmaps(image, keypoints, sigma):
     # Iterate through keypoints of each person in image
     for person_keypoints in keypoints:
 
-        for jointIndex in range(nJoints):
-            kps = person_keypoints[jointIndex]
+        for jointIndex, joint in enumerate(person_keypoints):
+            kps = joint
 
             if kps[2] > 0:
                 p_x, p_y = np.meshgrid(np.arange(width), np.arange(height))
@@ -22,7 +22,5 @@ def getHeatmaps(image, keypoints, sigma):
 
     # Background heatmap
     hmaps[nJoints] = 1 - np.sum(hmaps[0:nJoints], axis=0)
-
-    #heatmap[:, :, -1] = np.clip(1.0 - np.amax(heatmap, axis=2), 0.0, 1.0)
 
     return hmaps
